@@ -1,6 +1,5 @@
 package com.hakim.springsecurityamiogoscode.payload;
 
-import com.hakim.springsecurityamiogoscode.model.App_User;
 import com.hakim.springsecurityamiogoscode.repository.App_UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,16 +18,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        App_User user = appUserRepository.findByEmail(username);
-
-        return new CustomUserDetails(
-                user.getRole().getGrantedAuthority(),
-                user.getEmail(),
-                user.getPassword(),
-                true,
-                true,
-                true,
-                true
-        );
+        return appUserRepository.findByEmail(username);
     }
 }

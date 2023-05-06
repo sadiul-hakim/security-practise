@@ -1,7 +1,6 @@
-package com.hakim.springsecurityamiogoscode.config;
+package com.hakim.springsecurityamiogoscode.security;
 
 import com.hakim.springsecurityamiogoscode.payload.CustomUserDetailService;
-import com.hakim.springsecurityamiogoscode.security.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,35 +23,18 @@ public class SecurityConfig {
 
     @Bean
     protected SecurityFilterChain config(HttpSecurity http) throws Exception {
-        String[] whiteList = {
-                "/loginPage",
-                "/registerPage"
-        };
         http
+                .csrf().disable()
                 .authenticationProvider(daoAuthenticationProvider())
                 .authorizeHttpRequests()
-                .requestMatchers(whiteList)
-                    .permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/student/**")
-                    .hasAnyAuthority(Permission.COURSE_WRITE.getPermission())
+                    .hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/api/v1/student/**")
+                    .hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/api/v1/student/**")
-                    .hasAnyAuthority(Permission.STUDENT_READ.getPermission())
+                    .hasRole(Role.STUDENT.name())
                 .anyRequest()
-                    .authenticated()
-                .and()
-                .formLogin()
-                    .loginPage("/loginPage")
-                    .loginProcessingUrl("/perform_login")
-                    .defaultSuccessUrl("/home", true)
-                .and()
-                .rememberMe()
-                .and()
-                .logout()
-                    .logoutUrl("/logout")
-                    .clearAuthentication(true)
-                    .invalidateHttpSession(true)
-                    .deleteCookies("remember-me", "JSESSIONID")
-                    .logoutSuccessUrl("/loginPage");
+                    .authenticated();
 
         return http.build();
     }
@@ -70,4 +51,5 @@ public class SecurityConfig {
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
+
 }
