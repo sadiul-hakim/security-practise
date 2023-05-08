@@ -1,6 +1,7 @@
 package com.hakim.springsecurityamiogoscode.security;
 
-public enum Role {
-    STUDENT,
-    ADMIN;
+public class Role {
+    public static final String STUDENT="ROLE_STUDENT";
+    public static final String ADMIN="ROLE_ADMIN";
+
 }

@@ -1,7 +1,8 @@
 package com.hakim.springsecurityamiogoscode.model;
 
-import com.hakim.springsecurityamiogoscode.security.Role;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,12 +24,11 @@ public class App_User implements UserDetails {
     private String name;
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override

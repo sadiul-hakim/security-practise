@@ -1,5 +1,6 @@
 package com.hakim.springsecurityamiogoscode.payload;
 
+import com.hakim.springsecurityamiogoscode.exception.ResourceNotFoundException;
 import com.hakim.springsecurityamiogoscode.repository.App_UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return appUserRepository.findByEmail(username);
+        return appUserRepository.findByEmail(username)
+                .orElseThrow(()-> new ResourceNotFoundException("Could not find user with email: "+username));
     }
 }
