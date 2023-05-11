@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String userEmail=jwtHelper.extractUsername(token);
 
         // If the token contains username and user is not authenticated, program will enter the if block
-        if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() != null){
+        if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
             // todo: there is a case when user is authenticated
 
             // Find the userDetails using the username
